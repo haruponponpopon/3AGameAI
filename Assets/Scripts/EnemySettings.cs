@@ -24,4 +24,7 @@ public class EnemySettings : ScriptableObject {
     public float avoidCollisionWeight = 10;
     public float collisionAvoidDst = 5;
 
+    [Header ("predator")]
+    public float detectfoodRange = 10;
+    public float movetofoodWeight = 20;
 }

@@ -11,6 +11,7 @@ using UnityEngine;
 public class Boid : MonoBehaviour {
 
     BoidSettings settings;//スピードとか重さとか魚のデータを定義
+    Enemy enemy;
 
     // State
     [HideInInspector]
@@ -30,6 +31,8 @@ public class Boid : MonoBehaviour {
     public Vector3 centreOfFlockmates;
     [HideInInspector]
     public int numPerceivedFlockmates;
+    [HideInInspector]
+    public Vector3 avoidEnemyHeading;  //敵から逃げる向き
 
     // Cached
     Material material;
@@ -66,7 +69,6 @@ public class Boid : MonoBehaviour {
             var alignmentForce = SteerTowards (avgFlockHeading) * settings.alignWeight;             //近くの魚が向かう方向に向かう力
             var cohesionForce = SteerTowards (offsetToFlockmatesCentre) * settings.cohesionWeight;  //近くの魚の重心へ向かう力
             var seperationForce = SteerTowards (avgAvoidanceHeading) * settings.seperateWeight;     //近づきすぎるのを避ける力
-
             acceleration += alignmentForce;
             acceleration += cohesionForce;
             acceleration += seperationForce;
@@ -76,6 +78,12 @@ public class Boid : MonoBehaviour {
             Vector3 collisionAvoidDir = ObstacleRays ();         //障害物を避ける方向を取得
             Vector3 collisionAvoidForce = SteerTowards (collisionAvoidDir) * settings.avoidCollisionWeight;   //障害物を避ける力
             acceleration += collisionAvoidForce;
+        }
+
+        if (IsHeadingForEnemy ()) {
+            Vector3 enemyAvoidDir = CreateAvoidEnemy ();//敵を避ける方向を取得
+            Vector3 enemyAvoidForce = SteerTowards (enemyAvoidDir) * settings.avoidEnemyWeight;//敵を避ける力
+            acceleration += enemyAvoidForce;
         }
 
         velocity += acceleration * Time.deltaTime;        //加速度を用いて速度を変更する。
@@ -110,6 +118,19 @@ public class Boid : MonoBehaviour {
         }
 
         return forward;
+    }
+
+    bool IsHeadingForEnemy () {//敵が近くにいるかどうか判定
+        if (enemy==null)return false;
+        //敵の座標と自分の座標(position)の絶対値が一定値以下だったらtrueを返す
+        Vector3 dis = enemy.position - position;
+        if (dis.magnitude<settings.avoidEnemyWeight)return true;
+        else return false;
+    }
+
+    Vector3 CreateAvoidEnemy (){//敵から逃げる向きを生成
+        Vector3 dis = enemy.position - position;
+        return -dis;
     }
 
     Vector3 SteerTowards (Vector3 vector) {                             //力が大きくなりすぎないように上から抑える
