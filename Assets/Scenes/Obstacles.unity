@@ -803,7 +803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7395ae210c72a4976b74378d276fa497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings: {fileID: 0}
+  settings: {fileID: 11400000, guid: abc5b307635014089abcc9dd9d8f3dba, type: 2}
   compute: {fileID: 7200000, guid: 9905a8bfff2f74590b3a9dfc097005bf, type: 3}
   existTwoSpecies: 0
 --- !u!4 &1481470978
@@ -1126,7 +1126,7 @@ PrefabInstance:
     - target: {fileID: 3559297176007848096, guid: 4cde6ba5a87074e8a973d577574f33c1,
         type: 3}
       propertyPath: spawnCount
-      value: 350
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3559297176007848096, guid: 4cde6ba5a87074e8a973d577574f33c1,
         type: 3}
@@ -1271,6 +1271,47 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy Spawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073686425972816480, guid: fdd35139dbb1f4bb09c47833ed7c5401,
+        type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 6348192352498307215, guid: db443fec5a30d4f948def91a0039533e,
+        type: 3}
+    - target: {fileID: 4073686425972816480, guid: fdd35139dbb1f4bb09c47833ed7c5401,
+        type: 3}
+      propertyPath: colour.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073686425972816480, guid: fdd35139dbb1f4bb09c47833ed7c5401,
+        type: 3}
+      propertyPath: colour.b
+      value: 0.81960785
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073686425972816480, guid: fdd35139dbb1f4bb09c47833ed7c5401,
+        type: 3}
+      propertyPath: colour.g
+      value: 0.5616411
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073686425972816480, guid: fdd35139dbb1f4bb09c47833ed7c5401,
+        type: 3}
+      propertyPath: colour.r
+      value: 0.20392154
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073686425972816480, guid: fdd35139dbb1f4bb09c47833ed7c5401,
+        type: 3}
+      propertyPath: spawnCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073686425972816480, guid: fdd35139dbb1f4bb09c47833ed7c5401,
+        type: 3}
+      propertyPath: spawnRadius
+      value: 2.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073686425972816480, guid: fdd35139dbb1f4bb09c47833ed7c5401,
+        type: 3}
+      propertyPath: showSpawnRegion
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fdd35139dbb1f4bb09c47833ed7c5401, type: 3}
