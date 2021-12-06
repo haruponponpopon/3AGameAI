@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) 2019 Sebastian Lague
 Released under the MIT license
 https://github.com/SebLague/Boids/blob/master/LICENSE
@@ -7,22 +7,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour {
+public class EnemySpawner : MonoBehaviour {
 
     public enum GizmoType { Never, SelectedOnly, Always }
 
-    public Boid prefab;
+    public Enemy prefab;
     public float spawnRadius = 10;
-    public int spawnCount = 10;
+    public int spawnCount = 1;
     public Color colour;
     public GizmoType showSpawnRegion;
 
     void Awake () {
         for (int i = 0; i < spawnCount; i++) {                   //位置と向きをランダムに初期化
             Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
-            Boid boid = Instantiate (prefab);
-            boid.transform.position = pos;
-            boid.transform.forward = Random.insideUnitSphere;
+            Enemy enemy = Instantiate (prefab);
+            enemy.transform.position = pos;
+            enemy.transform.forward = Random.insideUnitSphere;
         }
     }
 //グラフィック

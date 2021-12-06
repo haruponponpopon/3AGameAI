@@ -1,16 +1,10 @@
-﻿/*
-Copyright (c) 2019 Sebastian Lague
-Released under the MIT license
-https://github.com/SebLague/Boids/blob/master/LICENSE
-*/
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boid : MonoBehaviour {
+public class Enemy : MonoBehaviour {
 
-    BoidSettings settings;//スピードとか重さとか魚のデータを定義
+    EnemySettings settings;//スピードとか重さとか魚のデータを定義
 
     // State
     [HideInInspector]
@@ -40,7 +34,7 @@ public class Boid : MonoBehaviour {
         cachedTransform = transform;
     }
 
-    public void Initialize (BoidSettings settings,int type) {
+    public void Initialize (EnemySettings settings,int type) {
         this.settings = settings;
         this.type=type;
         if(type==1){
@@ -55,7 +49,7 @@ public class Boid : MonoBehaviour {
         velocity = transform.forward * startSpeed;
     }
 
-    public void UpdateBoid () {
+    public void UpdateEnemy () {
         Vector3 acceleration = Vector3.zero;
 
         if (numPerceivedFlockmates != 0) {
