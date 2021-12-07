@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6194ee95dedb4d71a8fe738abba0f47, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  minSpeed: 4
-  maxSpeed: 7
+  minSpeed: 3
+  maxSpeed: 6
   perceptionRadius: 4
   avoidanceRadius: 1
   maxSteerForce: 8
@@ -27,3 +27,5 @@ MonoBehaviour:
   boundsRadius: 0.27
   avoidCollisionWeight: 20
   collisionAvoidDst: 5
+  avoidEnemyrange: 3
+  avoidEnemyWeight: 1000

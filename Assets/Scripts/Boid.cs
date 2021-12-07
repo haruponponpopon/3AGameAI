@@ -124,7 +124,7 @@ public class Boid : MonoBehaviour {
         if (enemy==null)return false;
         //敵の座標と自分の座標(position)の絶対値が一定値以下だったらtrueを返す
         Vector3 dis = enemy.position - position;
-        if (dis.magnitude<settings.avoidEnemyWeight)return true;
+        if (dis.magnitude<settings.avoidEnemyrange)return true;
         else return false;
     }
 

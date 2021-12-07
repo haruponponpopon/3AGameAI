@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
 
     EnemySettings settings;//スピードとか重さとか魚のデータを定義
+    Boid boid;
 
     // State
     [HideInInspector]
@@ -72,6 +73,12 @@ public class Enemy : MonoBehaviour {
             acceleration += collisionAvoidForce;
         }
 
+        if (IsHeadingForBoid ()) {
+            Vector3 moveToBoidDir = CreateMoveToBoid ();//Boidに向かう方向の取得
+            Vector3 moveToBoidForce = SteerTowards (moveToBoidDir) * settings.movetoboidWeight;
+            acceleration += moveToBoidForce;
+        }
+
         velocity += acceleration * Time.deltaTime;        //加速度を用いて速度を変更する。
         float speed = velocity.magnitude;
         Vector3 dir = velocity / speed;
@@ -104,6 +111,22 @@ public class Enemy : MonoBehaviour {
         }
 
         return forward;
+    }
+
+    bool IsHeadingForBoid (){
+        if (boid==null){
+            Debug.Log("null");
+            return false;
+        }
+        //boidの座標と自分の座標(position)の絶対値が一定値以下だったらtrueを返す
+        Vector3 dis = boid.centreOfFlockmates - position;
+        if (dis.magnitude<settings.detectboidRange)return true;
+        else return false;
+    }
+
+    Vector3 CreateMoveToBoid (){
+        Vector3 dis = boid.centreOfFlockmates - position;
+        return dis;
     }
 
     Vector3 SteerTowards (Vector3 vector) {                             //力が大きくなりすぎないように上から抑える

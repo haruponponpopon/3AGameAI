@@ -12,18 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c637b9a2fb0974482845e6a5976ac5de, type: 3}
   m_Name: Enemy Settings
   m_EditorClassIdentifier: 
-  minSpeed: 2
-  maxSpeed: 5
-  perceptionRadius: 2.5
+  minSpeed: 6
+  maxSpeed: 10
+  perceptionRadius: 4
   avoidanceRadius: 1
-  maxSteerForce: 3
-  alignWeight: 1
+  maxSteerForce: 4
+  alignWeight: 3
   cohesionWeight: 1
-  seperateWeight: 1
-  targetWeight: 1
+  seperateWeight: 2
+  targetWeight: 2
   obstacleMask:
     serializedVersion: 2
     m_Bits: 1536
   boundsRadius: 0.27
   avoidCollisionWeight: 20
   collisionAvoidDst: 5
+  detectboidRange: 400
+  movetoboidWeight: 200
