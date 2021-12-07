@@ -8,6 +8,7 @@ public class EnemySettings : ScriptableObject {
     // Settings
     public float minSpeed = 2;
     public float maxSpeed = 5;
+    public float maxCurveRadius = Mathf.PI/50;//曲がれる最大角度
     public float perceptionRadius = 2.5f;
     public float avoidanceRadius = 1;
     public float maxSteerForce = 3;

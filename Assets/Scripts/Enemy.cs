@@ -88,16 +88,22 @@ public class Enemy : MonoBehaviour {
             acceleration += collisionAvoidForce;
         }
 
-        // if (IsHeadingForBoid ()) {
-        //     Vector3 moveToBoidDir = CreateMoveToBoid ();//Boidに向かう方向の取得
-        //     Vector3 moveToBoidForce = SteerTowards (moveToBoidDir) * settings.movetoboidWeight;
-        //     acceleration += moveToBoidForce;
-        // }
-
         velocity += acceleration * Time.deltaTime;        //加速度を用いて速度を変更する。
         float speed = velocity.magnitude;
         Vector3 dir = velocity / speed;
         speed = Mathf.Clamp (speed, settings.minSpeed, settings.maxSpeed);      //速度のスカラが範囲内に収まるようにする
+        //向きが範囲内に収まるようにする
+        // Debug.Log(dir);
+        // float radSize = 2*Mathf.Sin(settings.maxCurveRadius/2);
+        // Vector3 moveDir = dir - forward;
+        // forward /= forward.magnitude;
+        // dir /= dir.magnitude;
+        // if (moveDir.magnitude>radSize)moveDir/=moveDir.magnitude*radSize;
+        // dir = moveDir+forward;
+        // dir /= dir.magnitude;
+
+
+
         velocity = dir * speed;
 
         cachedTransform.position += velocity * Time.deltaTime;
@@ -127,22 +133,6 @@ public class Enemy : MonoBehaviour {
 
         return forward;
     }
-
-    // bool IsHeadingForBoid (){
-    //     if (boid==null){
-    //         Debug.Log("null");
-    //         return false;
-    //     }
-    //     //boidの座標と自分の座標(position)の絶対値が一定値以下だったらtrueを返す
-    //     Vector3 dis = boid.centreOfFlockmates - position;
-    //     if (dis.magnitude<settings.detectboidRange)return true;
-    //     else return false;
-    // }
-
-    // Vector3 CreateMoveToBoid (){
-    //     Vector3 dis = boid.centreOfFlockmates - position;
-    //     return dis;
-    // }
 
     Vector3 SteerTowards (Vector3 vector) {                             //力が大きくなりすぎないように上から抑える
         Vector3 v = vector.normalized * settings.maxSpeed - velocity;
