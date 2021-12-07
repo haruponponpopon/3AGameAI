@@ -25,6 +25,12 @@ public class Enemy : MonoBehaviour {
     public Vector3 centreOfFlockmates;
     [HideInInspector]
     public int numPerceivedFlockmates;
+    [HideInInspector]
+    public Vector3 centre0fBoid;
+    [HideInInspector]
+    public Vector3 avgBoidHeading;
+    [HideInInspector]
+    public int numPerceivedBoid;
 
     // Cached
     Material material;
@@ -52,7 +58,6 @@ public class Enemy : MonoBehaviour {
 
     public void UpdateEnemy () {
         Vector3 acceleration = Vector3.zero;
-
         if (numPerceivedFlockmates != 0) {
             centreOfFlockmates /= numPerceivedFlockmates;               //自分の周りにいる魚の重心を求める
 
@@ -67,17 +72,27 @@ public class Enemy : MonoBehaviour {
             acceleration += seperationForce;
         }
 
+        if (numPerceivedBoid != 0) {
+            //自分の周りにいる餌
+            centre0fBoid /= numPerceivedBoid;
+
+            Vector3 offsetToBoidCentre = (centre0fBoid-position);
+            var moveToBoidForce = SteerTowards (offsetToBoidCentre) * settings.movetoboidWeight;
+
+            acceleration += moveToBoidForce;
+        }
+
         if (IsHeadingForCollision ()) {
             Vector3 collisionAvoidDir = ObstacleRays ();         //障害物を避ける方向を取得
             Vector3 collisionAvoidForce = SteerTowards (collisionAvoidDir) * settings.avoidCollisionWeight;   //障害物を避ける力
             acceleration += collisionAvoidForce;
         }
 
-        if (IsHeadingForBoid ()) {
-            Vector3 moveToBoidDir = CreateMoveToBoid ();//Boidに向かう方向の取得
-            Vector3 moveToBoidForce = SteerTowards (moveToBoidDir) * settings.movetoboidWeight;
-            acceleration += moveToBoidForce;
-        }
+        // if (IsHeadingForBoid ()) {
+        //     Vector3 moveToBoidDir = CreateMoveToBoid ();//Boidに向かう方向の取得
+        //     Vector3 moveToBoidForce = SteerTowards (moveToBoidDir) * settings.movetoboidWeight;
+        //     acceleration += moveToBoidForce;
+        // }
 
         velocity += acceleration * Time.deltaTime;        //加速度を用いて速度を変更する。
         float speed = velocity.magnitude;
@@ -113,21 +128,21 @@ public class Enemy : MonoBehaviour {
         return forward;
     }
 
-    bool IsHeadingForBoid (){
-        if (boid==null){
-            Debug.Log("null");
-            return false;
-        }
-        //boidの座標と自分の座標(position)の絶対値が一定値以下だったらtrueを返す
-        Vector3 dis = boid.centreOfFlockmates - position;
-        if (dis.magnitude<settings.detectboidRange)return true;
-        else return false;
-    }
+    // bool IsHeadingForBoid (){
+    //     if (boid==null){
+    //         Debug.Log("null");
+    //         return false;
+    //     }
+    //     //boidの座標と自分の座標(position)の絶対値が一定値以下だったらtrueを返す
+    //     Vector3 dis = boid.centreOfFlockmates - position;
+    //     if (dis.magnitude<settings.detectboidRange)return true;
+    //     else return false;
+    // }
 
-    Vector3 CreateMoveToBoid (){
-        Vector3 dis = boid.centreOfFlockmates - position;
-        return dis;
-    }
+    // Vector3 CreateMoveToBoid (){
+    //     Vector3 dis = boid.centreOfFlockmates - position;
+    //     return dis;
+    // }
 
     Vector3 SteerTowards (Vector3 vector) {                             //力が大きくなりすぎないように上から抑える
         Vector3 v = vector.normalized * settings.maxSpeed - velocity;

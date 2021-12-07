@@ -14,12 +14,29 @@ struct Enemy {
     float3 flockCentre;
     float3 separationHeading;
     int numFlockmates;
+
+    float3 boidHeading;
+    float3 boidCentre;
+    int numBoid;
+};
+struct Boid {
+    float3 position;
+    float3 direction;
+    int type;
+
+    float3 flockHeading;
+    float3 flockCentre;
+    float3 separationHeading;
+    int numFlockmates;
 };
 
 RWStructuredBuffer<Enemy> enemies;
+RWStructuredBuffer<Boid> boids;
 int numEnemies;
+int numBoids;
 float viewRadius;
 float avoidRadius;
+float viewBoidRadius;
 
 [numthreads(threadGroupSize,1,1)]   //1024*1*1=1024スレッドを並列に実行
 void CSMain (uint3 id : SV_DispatchThreadID)
@@ -30,17 +47,31 @@ void CSMain (uint3 id : SV_DispatchThreadID)
             float3 offset = enemyB.position - enemies[id.x].position;
             float sqrDst = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
 
-            //boids[indexB]が探索範囲内かつ同種族なら、群れの重心と進行方向をアップデートする。
+            //enemy[indexB]が探索範囲内かつ同種族なら、群れの重心と進行方向をアップデートする。
             if (sqrDst < viewRadius * viewRadius && enemyB.type==enemies[id.x].type) {
                 enemies[id.x].numFlockmates += 1;
                 enemies[id.x].flockHeading += enemyB.direction;
                 enemies[id.x].flockCentre += enemyB.position;
 
                 //このif文は外に出しても
+                //魚が近すぎたら
                 if (sqrDst < avoidRadius * avoidRadius) {
                     enemies[id.x].separationHeading -= offset / sqrDst;
                 }
             }
+        }
+    }
+    //boid(近くにいる餌)が近くにいたら、boidに関する重心をアップデート
+    for (int indexA = 0; indexA < numBoids; indexA ++) {
+        Boid boidA = boids[indexA];
+        float3 offset = boidA.position - enemies[id.x].position;
+        float sqrDst = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
+
+        //探索範囲内なら
+        if (sqrDst < viewBoidRadius * viewBoidRadius) {
+            enemies[id.x].numBoid += 1;
+            enemies[id.x].boidHeading += boidA.direction;
+            enemies[id.x].boidCentre += boidA.position;
         }
     }
 }
