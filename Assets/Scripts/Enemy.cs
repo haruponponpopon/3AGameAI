@@ -44,9 +44,9 @@ public class Enemy : MonoBehaviour {
     public void Initialize (EnemySettings settings,int type) {
         this.settings = settings;
         this.type=type;
-        if(type==1){
-            transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material=blueMat;    //if two species exist, change color
-        }
+        // if(type==0){
+        transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material=blueMat;    //青色にする
+        // }
         
 
         position = cachedTransform.position;
