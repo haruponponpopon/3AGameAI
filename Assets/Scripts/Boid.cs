@@ -32,7 +32,11 @@ public class Boid : MonoBehaviour {
     [HideInInspector]
     public int numPerceivedFlockmates;
     [HideInInspector]
-    public Vector3 avoidEnemyHeading;  //敵から逃げる向き
+    public Vector3 centre0fEnemy;
+    [HideInInspector]
+    public Vector3 avgEnemyHeading;  //敵から逃げる向き
+    [HideInInspector]
+    public int numPerceivedEnemy;
 
     // Cached
     Material material;
@@ -78,12 +82,14 @@ public class Boid : MonoBehaviour {
             Vector3 collisionAvoidDir = ObstacleRays ();         //障害物を避ける方向を取得
             Vector3 collisionAvoidForce = SteerTowards (collisionAvoidDir) * settings.avoidCollisionWeight;   //障害物を避ける力
             acceleration += collisionAvoidForce;
-        }
+        }else if (numPerceivedEnemy != 0) {
+            //自分の周りにいる敵
+            centre0fEnemy /= numPerceivedEnemy;
 
-        if (IsHeadingForEnemy ()) {
-            Vector3 enemyAvoidDir = CreateAvoidEnemy ();//敵を避ける方向を取得
-            Vector3 enemyAvoidForce = SteerTowards (enemyAvoidDir) * settings.avoidEnemyWeight;//敵を避ける力
-            acceleration += enemyAvoidForce;
+            Vector3 offsetToEnemyCentre = (centre0fEnemy-position);
+            var moveToEnemyForce = SteerTowards (offsetToEnemyCentre) * settings.avoidEnemyWeight;
+
+            acceleration -= moveToEnemyForce;//反対方向に向かう
         }
 
         velocity += acceleration * Time.deltaTime;        //加速度を用いて速度を変更する。
@@ -118,19 +124,6 @@ public class Boid : MonoBehaviour {
         }
 
         return forward;
-    }
-
-    bool IsHeadingForEnemy () {//敵が近くにいるかどうか判定
-        if (enemy==null)return false;
-        //敵の座標と自分の座標(position)の絶対値が一定値以下だったらtrueを返す
-        Vector3 dis = enemy.position - position;
-        if (dis.magnitude<settings.avoidEnemyrange)return true;
-        else return false;
-    }
-
-    Vector3 CreateAvoidEnemy (){//敵から逃げる向きを生成
-        Vector3 dis = enemy.position - position;
-        return -dis;
     }
 
     Vector3 SteerTowards (Vector3 vector) {                             //力が大きくなりすぎないように上から抑える

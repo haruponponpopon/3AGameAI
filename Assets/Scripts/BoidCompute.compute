@@ -19,12 +19,29 @@ struct Boid {
     float3 flockCentre;
     float3 separationHeading;
     int numFlockmates;
+
+    float3 enemyHeading;
+    float3 enemyCentre;
+    int numEnemy;
+};
+struct Enemy {
+    float3 position;
+    float3 direction;
+    int type;
+
+    float3 flockHeading;
+    float3 flockCentre;
+    float3 separationHeading;
+    int numFlockmates;
 };
 
+RWStructuredBuffer<Enemy> enemies;
 RWStructuredBuffer<Boid> boids;
 int numBoids;
+int numEnemies;
 float viewRadius;
 float avoidRadius;
+float viewEnemyRadius;
 
 [numthreads(threadGroupSize,1,1)]   //1024*1*1=1024スレッドを並列に実行
 void CSMain (uint3 id : SV_DispatchThreadID)
@@ -46,6 +63,19 @@ void CSMain (uint3 id : SV_DispatchThreadID)
                     boids[id.x].separationHeading -= offset / sqrDst;
                 }
             }
+        }
+    }
+    //boid(近くにいる餌)が近くにいたら、boidに関する重心をアップデート
+    for (int indexA = 0; indexA < numEnemies; indexA ++) {
+        Enemy enemyA = enemies[indexA];
+        float3 offset = enemyA.position - boids[id.x].position;
+        float sqrDst = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
+
+        //探索範囲内なら
+        if (sqrDst < viewEnemyRadius * viewEnemyRadius) {
+            boids[id.x].numEnemy += 1;
+            boids[id.x].enemyHeading += enemyA.direction;
+            boids[id.x].enemyCentre += enemyA.position;
         }
     }
 }
